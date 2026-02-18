@@ -1,0 +1,69 @@
+package com.conducta_entrada.config;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Manejador global de excepciones para toda la aplicación.
+ * Intercepta las excepciones lanzadas en cualquier controlador y retorna
+ * respuestas HTTP con mensajes de error claros en formato JSON.
+ *
+ * La anotación @RestControllerAdvice aplica este manejador a todos los
+ * controladores.
+ */
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    /**
+     * Maneja excepciones de tipo RuntimeException.
+     * Se dispara cuando ocurre un error de lógica de negocio,
+     * por ejemplo: usuario duplicado o usuario no encontrado.
+     *
+     * @param ex excepción capturada
+     * @return respuesta HTTP 400 (Bad Request) con el mensaje de error
+     */
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    /**
+     * Maneja excepciones de credenciales inválidas.
+     * Se dispara cuando el usuario intenta iniciar sesión con
+     * un usuario o contraseña incorrectos.
+     *
+     * @param ex excepción de credenciales inválidas
+     * @return respuesta HTTP 401 (Unauthorized) con mensaje genérico
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String, String>> handleBadCredentials(BadCredentialsException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Credenciales inválidas");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    /**
+     * Maneja excepciones de validación de campos.
+     * Se dispara cuando los datos enviados no cumplen con las validaciones
+     * definidas con @NotBlank u otras anotaciones de validación en los DTOs.
+     *
+     * @param ex excepción de validación con los errores de cada campo
+     * @return respuesta HTTP 400 (Bad Request) con el detalle de cada campo
+     *         inválido
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidation(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(err -> errors.put(err.getField(), err.getDefaultMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+}
