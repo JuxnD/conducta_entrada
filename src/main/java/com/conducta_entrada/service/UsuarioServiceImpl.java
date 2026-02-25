@@ -14,9 +14,6 @@ import java.util.stream.Collectors;
  * Implementación del servicio de usuarios.
  * Contiene toda la lógica de negocio para gestionar los usuarios de la
  * aplicación.
- *
- * @RequiredArgsConstructor genera el constructor con las dependencias
- *                          inyectadas.
  */
 @Service
 @RequiredArgsConstructor

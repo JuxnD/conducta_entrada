@@ -11,12 +11,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ConductaEntradaApplication {
 
-	/**
-	 * Método principal que inicia la aplicación Spring Boot.
-	 * 
-	 * @param args argumentos de línea de comandos
-	 */
-	public static void main(String[] args) {
-		SpringApplication.run(ConductaEntradaApplication.class, args);
-	}
+    /**
+     * Método principal que inicia la aplicación Spring Boot.
+     * 
+     * @param args argumentos de línea de comandos
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(ConductaEntradaApplication.class, args);
+    }
 }

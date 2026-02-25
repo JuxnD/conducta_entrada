@@ -34,3 +34,7 @@ build/
 
 ### Mac ###
 .DS_Store
+
+# Guías de estudio personales
+GUIA_SUSTENTACION.md
+GUIA_COMPLETA_PROYECTO.html

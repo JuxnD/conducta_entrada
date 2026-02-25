@@ -23,9 +23,6 @@ import java.io.IOException;
  * en el header "Authorization". Si el token es válido, establece la
  * autenticación
  * en el contexto de seguridad de Spring.
- *
- * Extiende OncePerRequestFilter para garantizar que se ejecute solo una vez por
- * petición.
  */
 @Component
 @RequiredArgsConstructor

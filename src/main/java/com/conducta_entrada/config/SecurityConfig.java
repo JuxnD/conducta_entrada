@@ -46,9 +46,6 @@ public class SecurityConfig {
      * Endpoints protegidos (requieren token JWT):
      * - POST /api/usuarios → Crear usuario
      * - GET /api/usuarios/{id} → Obtener usuario por ID
-     *
-     * @param http configurador de seguridad HTTP
-     * @return cadena de filtros de seguridad configurada
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -79,8 +76,6 @@ public class SecurityConfig {
      * Configura el proveedor de autenticación.
      * Utiliza DaoAuthenticationProvider para buscar usuarios en la base de datos
      * y comparar contraseñas encriptadas con BCrypt.
-     *
-     * @return proveedor de autenticación configurado
      */
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -93,9 +88,6 @@ public class SecurityConfig {
     /**
      * Expone el AuthenticationManager como bean de Spring.
      * Necesario para que el AuthController pueda inyectarlo y usarlo en el login.
-     *
-     * @param config configuración de autenticación
-     * @return gestor de autenticación
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -105,8 +97,6 @@ public class SecurityConfig {
     /**
      * Configura el codificador de contraseñas BCrypt.
      * Todas las contraseñas se encriptan antes de almacenarse en la base de datos.
-     *
-     * @return codificador de contraseñas BCrypt
      */
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -14,9 +14,6 @@ import java.util.Map;
  * Manejador global de excepciones para toda la aplicación.
  * Intercepta las excepciones lanzadas en cualquier controlador y retorna
  * respuestas HTTP con mensajes de error claros en formato JSON.
- *
- * La anotación @RestControllerAdvice aplica este manejador a todos los
- * controladores.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
