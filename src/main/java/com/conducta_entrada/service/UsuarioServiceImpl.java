@@ -1,6 +1,8 @@
 package com.conducta_entrada.service;
 
 import com.conducta_entrada.dto.*;
+import com.conducta_entrada.exception.BadRequestException;
+import com.conducta_entrada.exception.NotFoundException;
 import com.conducta_entrada.model.Usuario;
 import com.conducta_entrada.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +44,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     public UsuarioResponseDTO crearUsuario(UsuarioCreateDTO dto) {
         // Verificar si el nombre de usuario ya está registrado
         if (usuarioRepository.existsByUser(dto.getUser())) {
-            throw new RuntimeException("El usuario '" + dto.getUser() + "' ya existe");
+            throw new BadRequestException("El usuario '" + dto.getUser() + "' ya existe");
         }
 
         // Construir la entidad Usuario con la contraseña encriptada
@@ -93,7 +95,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     public UsuarioListDTO obtenerPorId(Long id) {
         // Buscar usuario por ID, lanzar excepción si no existe
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario con id " + id + " no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Usuario con id " + id + " no encontrado"));
 
         // Convertir la entidad a DTO para la respuesta
         return UsuarioListDTO.builder()
@@ -115,6 +117,11 @@ public class UsuarioServiceImpl implements UsuarioService {
      */
     @Override
     public NombreCompletoDTO obtenerNombreCompleto(String nombre, String apellido) {
-        return new NombreCompletoDTO(nombre + " " + apellido);
+        
+        Usuario usuario = usuarioRepository.findByNombreAndApellido(nombre, apellido)
+                .orElseThrow(() -> new NotFoundException(
+                        "Usuario " + nombre + " " + apellido +" no encontrado"));
+
+        return new NombreCompletoDTO(usuario.getNombre() + " " + usuario.getApellido());
     }
 }
