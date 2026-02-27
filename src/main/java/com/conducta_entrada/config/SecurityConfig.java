@@ -53,7 +53,9 @@ public class SecurityConfig {
                 // Deshabilitar CSRF ya que usamos tokens JWT (API REST sin estado)
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Requisito 2: Obtener todos los usuarios - SIN autenticación
+                        // Permite mostrar la pagina de error por defecto
+                        .requestMatchers(HttpMethod.GET, "/error").permitAll()
+                        // Endpoint 2: Obtener todos - SIN autenticación
                         .requestMatchers(HttpMethod.GET, "/api/usuarios").permitAll()
                         // Requisito 4: Parámetros en URL - SIN autenticación
                         .requestMatchers(HttpMethod.GET, "/api/params").permitAll()

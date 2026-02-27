@@ -39,8 +39,8 @@ public class ParamsController {
      */
     @GetMapping("/params")
     public ResponseEntity<NombreCompletoDTO> obtenerNombreCompleto(
-            @RequestParam String nombre,
-            @RequestParam String apellido) {
+            @RequestParam(required = true) String nombre,
+            @RequestParam(required = true) String apellido) {
 
         NombreCompletoDTO response = usuarioService.obtenerNombreCompleto(nombre, apellido);
         return ResponseEntity.ok(response);

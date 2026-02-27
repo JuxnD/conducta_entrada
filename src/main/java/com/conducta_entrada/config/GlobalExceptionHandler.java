@@ -1,11 +1,16 @@
 package com.conducta_entrada.config;
 
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.conducta_entrada.exception.BadRequestException;
+import com.conducta_entrada.exception.NotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,16 +23,31 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    
     /**
-     * Maneja excepciones de tipo RuntimeException.
-     * Se dispara cuando ocurre un error de lógica de negocio,
-     * por ejemplo: usuario duplicado o usuario no encontrado.
+     * Maneja excepciones de tipo NotFound.
+     * Se dispara cuando un recurso no existe.
+     *
+     * @param ex excepción capturada
+     * @return respuesta HTTP 404 (Not Found) con el mensaje de error
+     */
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String,String>> handleNotfound (NotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    /**
+     * Maneja excepciones de tipo BadRequest.
+     * Se dispara cuando ocurre un error en la peticion,
+     * por ejemplo: usuario duplicado.
      *
      * @param ex excepción capturada
      * @return respuesta HTTP 400 (Bad Request) con el mensaje de error
      */
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Map<String, String>> handleBadRequest (BadRequestException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
@@ -62,5 +82,19 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(err -> errors.put(err.getField(), err.getDefaultMessage()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    /**
+     * Maneja excepciones de tipo MissingServletRequestParameter.
+     * Se dispara cuando los parametros requeridos no se envian.
+     *
+     * @param ex excepción capturada
+     * @return respuesta HTTP 400 (Bad Request) con el mensaje de error
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<Map<String, String>> handleMissingServletRequestParameter (MissingServletRequestParameterException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Los parametros son obligatorios ");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }

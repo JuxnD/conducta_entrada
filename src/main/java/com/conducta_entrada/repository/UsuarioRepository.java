@@ -34,4 +34,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
      * @return true si el usuario ya existe, false en caso contrario
      */
     boolean existsByUser(String user);
+
+    Optional<Usuario> findByNombreAndApellido(String nombre, String apellido);
 }
